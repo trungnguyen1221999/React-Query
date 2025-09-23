@@ -1,15 +1,26 @@
+import { useQuery } from '@tanstack/react-query'
 import { getStudents } from 'apis/students.api'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Student } from 'types/types'
-
+const limit = 10
 export default function Students() {
-  const [students, setStudents] = useState<Student[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  useEffect(() => {
-    getStudents(1, 10).then((res) => setStudents(res.data))
-    setIsLoading(false)
-  }, [])
+  // const [students, setStudents] = useState<Student[]>([])
+  // const [isLoading, setIsLoading] = useState(true)
+  // useEffect(() => {
+  //   getStudents(1, 10)
+  //     .then((res) => setStudents(res.data))
+  //     .finally(() => setIsLoading(false))
+  // }, [])
+  const [searchParams] = useSearchParams()
+  const searchParamsObject = Object.fromEntries([...searchParams])
+  const page = Number(searchParamsObject.page) || 1
+  const queryStudent = useQuery({
+    queryKey: ['students', page],
+    queryFn: () => getStudents(page, limit)
+  })
+  const { data, isLoading } = queryStudent
+
   return (
     <div>
       {isLoading && (
@@ -56,7 +67,7 @@ export default function Students() {
           </thead>
           <tbody>
             {!isLoading &&
-              students.map((student, index) => (
+              data?.data.map((student, index) => (
                 <tr
                   key={student.id}
                   className='border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600'
