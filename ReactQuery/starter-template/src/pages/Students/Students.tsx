@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { getStudents } from 'apis/students.api'
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -18,7 +18,8 @@ export default function Students() {
   const page = Number(searchParamsObject.page) || 1
   const queryStudent = useQuery({
     queryKey: ['students', page],
-    queryFn: () => getStudents(page, limit)
+    queryFn: () => getStudents(page, limit),
+    placeholderData: keepPreviousData
   })
   const { data, isLoading } = queryStudent
   const totalStudents = data?.headers['x-total-count']
