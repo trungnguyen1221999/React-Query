@@ -1,9 +1,9 @@
-import { useMutation } from '@tanstack/react-query'
-import { AddStudents } from 'apis/students.api'
-import { useState } from 'react'
-import { useMatch } from 'react-router-dom'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { AddStudents, EditStudents, getStudentById } from 'apis/students.api'
+import { useEffect, useState } from 'react'
+import { useMatch, useParams } from 'react-router-dom'
 import { AllInformationStudent } from 'types/types'
-import axios, { isAxiosError } from 'axios'
+import axios from 'axios'
 
 type FormState = Omit<AllInformationStudent, 'id'>
 const initialState: FormState = {
@@ -16,6 +16,13 @@ const initialState: FormState = {
   first_name: ''
 }
 export default function AddStudent() {
+  const { id } = useParams()
+    const query = useQuery({
+      queryKey: ['student', id],
+      queryFn: () => getStudentById(id)})
+    console.log(query)
+  }
+
   const [formState, setFormState] = useState<FormState>(initialState)
   const [invalidEmail, setInvalidEmail] = useState(false)
   const isAdding = Boolean(useMatch('/students/add'))
@@ -24,16 +31,25 @@ export default function AddStudent() {
     mutationFn: AddStudents
   })
 
+  const EditMutation = useMutation({
+    mutationFn: EditStudents
+  })
   type Key = keyof typeof initialState
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key: Key) => {
     setFormState({ ...formState, [key]: e.target.value })
   }
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    setInvalidEmail(false)
+    setErrorMessage('')
     try {
-      await AddingMutation.mutateAsync(formState as FormState)
-      setFormState(initialState)
+      if (isAdding) {
+        await AddingMutation.mutateAsync(formState as FormState)
+        setFormState(initialState)
+      } else {
+        await EditMutation.mutateAsync(formState as AllInformationStudent)
+      }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 422) {
         setInvalidEmail(true)

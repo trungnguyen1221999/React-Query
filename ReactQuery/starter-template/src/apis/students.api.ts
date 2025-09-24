@@ -8,3 +8,11 @@ export const getStudents = async (page: number | string, limit: number | string)
 export const AddStudents = async (student: Omit<AllInformationStudent, 'id'>) => {
   return http.post<Student>('students', student)
 }
+
+export const EditStudents = async (student: AllInformationStudent) => {
+  return http.put<Student>(`students/${student.id}`, student)
+}
+
+export const getStudentById = async (id: string | number) => {
+  return http.get<AllInformationStudent>(`students/${id}`)
+}
