@@ -26,9 +26,12 @@ export default function Students() {
   const totalPages = totalStudents ? Math.ceil(Number(totalStudents) / limit) : 0
   return (
     <div>
+      <h1 className='text-lg'>Students</h1>
+      <StyledButton>
+        <Link to='/students/add'>Add</Link>
+      </StyledButton>
       {isLoading && (
         <>
-          <h1 className='text-lg'>Students</h1>
           <div role='status' className='mt-6 animate-pulse'>
             <div className='mb-4 h-4  rounded bg-gray-200 dark:bg-gray-700' />
             <div className='mb-2.5 h-10  rounded bg-gray-200 dark:bg-gray-700' />
@@ -70,7 +73,7 @@ export default function Students() {
           </thead>
           <tbody>
             {!isLoading &&
-              data?.data.map((student, index) => (
+              data?.data.map((student: Student) => (
                 <tr
                   key={student.id}
                   className='border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600'
@@ -85,7 +88,7 @@ export default function Students() {
                   <td className='py-4 px-6'>{student.email}</td>
                   <td className='py-4 px-6 text-right'>
                     <Link
-                      to='/students/1'
+                      to={'/students/${student.id}'}
                       className='mr-5 font-medium text-blue-600 hover:underline dark:text-blue-500'
                     >
                       Edit
@@ -156,5 +159,16 @@ const StyledActive = styled.li`
   .active {
     background-color: green !important;
     color: white !important;
+  }
+`
+const StyledButton = styled.a`
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: blue;
+  color: white;
+  transition: opacity 0.3s;
+  margin-top: 20px;
+  &:hover {
+    opacity: 0.8;
   }
 `
