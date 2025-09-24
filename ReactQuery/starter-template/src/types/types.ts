@@ -9,5 +9,5 @@ export interface AllInformationStudent extends Student {
   gender: 'Other' | 'Male' | 'Female' | ''
   first_name: string
   country: string
-  address: string
+  btc_address: string
 }

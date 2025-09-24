@@ -11,18 +11,11 @@ const initialState: FormState = {
   email: '',
   last_name: '',
   gender: '',
-  address: '',
+  btc_address: '',
   country: '',
   first_name: ''
 }
 export default function AddStudent() {
-  const { id } = useParams()
-    const query = useQuery({
-      queryKey: ['student', id],
-      queryFn: () => getStudentById(id)})
-    console.log(query)
-  }
-
   const [formState, setFormState] = useState<FormState>(initialState)
   const [invalidEmail, setInvalidEmail] = useState(false)
   const isAdding = Boolean(useMatch('/students/add'))
@@ -38,6 +31,18 @@ export default function AddStudent() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key: Key) => {
     setFormState({ ...formState, [key]: e.target.value })
   }
+  const { id } = useParams()
+  const { data } = useQuery({
+    queryKey: ['student', id],
+    queryFn: () => getStudentById(Number(id)),
+    enabled: id !== undefined
+  })
+  useEffect(() => {
+    if (data) {
+      setFormState(data.data)
+    }
+  }, [data])
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -106,7 +111,6 @@ export default function AddStudent() {
               </div>
               <div className='mb-4 flex items-center'>
                 <input
-                  defaultChecked
                   id='gender-2'
                   type='radio'
                   name='gender'
@@ -121,7 +125,6 @@ export default function AddStudent() {
               </div>
               <div className='flex items-center'>
                 <input
-                  defaultChecked
                   id='gender-3'
                   type='radio'
                   name='gender'
@@ -220,8 +223,8 @@ export default function AddStudent() {
               className='peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500'
               placeholder=' '
               required
-              value={formState.address}
-              onChange={(e) => handleChange(e, 'address')}
+              value={formState.btc_address}
+              onChange={(e) => handleChange(e, 'btc_address')}
             />
             <label
               htmlFor='btc_address'

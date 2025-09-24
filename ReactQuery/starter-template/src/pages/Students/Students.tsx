@@ -88,7 +88,7 @@ export default function Students() {
                   <td className='py-4 px-6'>{student.email}</td>
                   <td className='py-4 px-6 text-right'>
                     <Link
-                      to={'/students/${student.id}'}
+                      to={`/students/${student.id}`}
                       className='mr-5 font-medium text-blue-600 hover:underline dark:text-blue-500'
                     >
                       Edit
