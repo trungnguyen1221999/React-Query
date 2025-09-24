@@ -16,3 +16,7 @@ export const EditStudents = async (student: AllInformationStudent) => {
 export const getStudentById = async (id: string | number) => {
   return http.get<AllInformationStudent>(`students/${id}`)
 }
+
+export const deleteStudentById = async (id: string | number) => {
+  return http.delete(`students/${id}`)
+}

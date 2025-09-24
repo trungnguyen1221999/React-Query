@@ -62,6 +62,7 @@ export default function AddStudent() {
       }
     }
   }
+
   return (
     <div>
       <h1 className='text-lg'>{isAdding ? 'Add' : 'Edit'}</h1>

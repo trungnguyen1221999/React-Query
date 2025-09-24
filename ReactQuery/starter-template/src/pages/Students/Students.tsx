@@ -1,7 +1,7 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { getStudents } from 'apis/students.api'
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
+import { deleteStudentById, getStudents } from 'apis/students.api'
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Student } from 'types/types'
 const limit = 10
@@ -24,6 +24,13 @@ export default function Students() {
   const { data, isLoading } = queryStudent
   const totalStudents = data?.headers['x-total-count']
   const totalPages = totalStudents ? Math.ceil(Number(totalStudents) / limit) : 0
+  const deleteMutation = useMutation({
+    mutationFn: deleteStudentById
+  })
+  const handleDelete = (id: number) => {
+    deleteMutation.mutate(id)
+    queryStudent.refetch()
+  }
   return (
     <div>
       <h1 className='text-lg'>Students</h1>
@@ -93,7 +100,12 @@ export default function Students() {
                     >
                       Edit
                     </Link>
-                    <button className='font-medium text-red-600 dark:text-red-500'>Delete</button>
+                    <button
+                      onClick={() => handleDelete(student.id)}
+                      className='font-medium text-red-600 dark:text-red-500'
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
