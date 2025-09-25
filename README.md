@@ -28,14 +28,3 @@ You can **add**, **edit**, and **delete** students. This project is mainly for l
 - **Backend**: Pre-built server with student data  
 
 ---
-
-## ⚡ React Query Usage
-
-- **Fetching data**:
-
-```ts
-const { data, isLoading } = useQuery({
-  queryKey: ['students', page],
-  queryFn: () => getStudents(page, limit),
-  staleTime: 5000
-})
