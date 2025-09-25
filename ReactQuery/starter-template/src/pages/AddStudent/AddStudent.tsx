@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useMatch, useParams } from 'react-router-dom'
 import { AllInformationStudent } from 'types/types'
 import axios from 'axios'
-
+import {toast} from 'react-toastify'
 type FormState = Omit<AllInformationStudent, 'id'>
 const initialState: FormState = {
   avatar: '',
@@ -52,13 +52,16 @@ export default function AddStudent() {
       if (isAdding) {
         await AddingMutation.mutateAsync(formState as FormState)
         setFormState(initialState)
+        toast.success('Add student successfully')
       } else {
         await EditMutation.mutateAsync(formState as AllInformationStudent)
+        toast.success('Edit student successfully')
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 422) {
         setInvalidEmail(true)
         setErrorMessage(error.response?.data.error.email)
+        toast.error('Something went wrong, please try again')
       }
     }
   }

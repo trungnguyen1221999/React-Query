@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Student } from 'types/types'
+import {toast} from 'react-toastify'
 const limit = 10
 export default function Students() {
   // const [students, setStudents] = useState<Student[]>([])
@@ -28,9 +29,13 @@ export default function Students() {
     mutationFn: deleteStudentById
   })
   const handleDelete = (id: number) => {
-    deleteMutation.mutate(id)
-    queryStudent.refetch()
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        queryStudent.refetch()
+    toast.success('Delete student successfully')
+    }})
   }
+    
   return (
     <div>
       <h1 className='text-lg'>Students</h1>
