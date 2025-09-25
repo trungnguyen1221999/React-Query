@@ -35,7 +35,8 @@ export default function AddStudent() {
   const { data } = useQuery({
     queryKey: ['student', id],
     queryFn: () => getStudentById(Number(id)),
-    enabled: id !== undefined
+    enabled: id !== undefined,
+    staleTime: 1000 * 5 // 5 seconds
   })
   useEffect(() => {
     if (data) {

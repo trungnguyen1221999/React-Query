@@ -1,10 +1,11 @@
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
-import { deleteStudentById, getStudents } from 'apis/students.api'
+import { keepPreviousData, QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { deleteStudentById, getStudentById, getStudents } from 'apis/students.api'
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Student } from 'types/types'
 import {toast} from 'react-toastify'
+import { queryClient } from 'index'
 const limit = 10
 export default function Students() {
   // const [students, setStudents] = useState<Student[]>([])
@@ -22,6 +23,13 @@ export default function Students() {
     queryFn: () => getStudents(page, limit),
     placeholderData: keepPreviousData
   })
+  const preFetching = async (id : string)=>{
+    await queryClient.prefetchQuery({
+      queryKey: ['student', id],
+      queryFn: () => getStudentById(Number(id)),
+    })
+  }
+
   const { data, isLoading } = queryStudent
   const totalStudents = data?.headers['x-total-count']
   const totalPages = totalStudents ? Math.ceil(Number(totalStudents) / limit) : 0
@@ -86,7 +94,7 @@ export default function Students() {
           <tbody>
             {!isLoading &&
               data?.data.map((student: Student) => (
-                <tr
+                <tr onMouseEnter={()=>preFetching(String(student.id))}
                   key={student.id}
                   className='border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600'
                 >
