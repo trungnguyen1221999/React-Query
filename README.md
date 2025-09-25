@@ -24,7 +24,7 @@ You can **add**, **edit**, and **delete** students. This project is mainly for l
 - **Axios** for API calls  
 - **React Router v6** for navigation  
 - **React Toastify** for notifications  
-- **Styled Components** for styling  
+- **Styled Components, TailwindCss** for styling  
 - **Backend**: Pre-built server with student data  
 
 ---
